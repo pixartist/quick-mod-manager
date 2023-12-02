@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { promisify } from 'util';
 import stream from 'stream';
-import unzipper from 'unzipper';
+import decompress from 'decompress';
 import * as path from 'path';
 import { promises as pfs } from 'fs';
 
@@ -73,12 +73,7 @@ export class FileOperations {
     }
   }
 
-  extractZip(filePath: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      fs.createReadStream(filePath)
-        .pipe(unzipper.Extract({ path: './zip' }))
-        .on('close', resolve)
-        .on('error', reject);
-    });
+  extractZip(filePath: string, targetPath: string): Promise<any> {
+    return decompress(filePath, targetPath);
   };
 }

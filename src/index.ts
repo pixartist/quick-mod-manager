@@ -14,9 +14,10 @@ async function getMod(url: string, outPath: string, forceDl: boolean = false) {
 
   const fileUrl = await scraper.getDownloadLink();
   console.log('file url: ' + fileUrl);
-
   const modName = await scraper.getName();
   console.log('mod name: ' + modName);
+  const modFileName = await downloader.getActualFileName(fileUrl);
+  console.log('file name: ' + modFileName);
 
   // exclude mods that contain the word "BepInEx"
   if (modName.includes('BepInEx')) {
@@ -30,29 +31,34 @@ async function getMod(url: string, outPath: string, forceDl: boolean = false) {
     await getMod(dep, outPath, forceDl);
   }
   console.log('dependencies: ' + dependencies);
-  const filePath = path.join(cacheDir, modName + '.zip');
 
   // make sure cache dir exists
   await fileOps.makeSureDirExists(cacheDir);
 
+  const modCacheFile = path.join(cacheDir, modFileName);
+
   // check if mod is already installed
-  if (!await fileOps.exists(filePath) || forceDl) {
-    await downloader.download(fileUrl, filePath);
+  if (!await fileOps.exists(modCacheFile) || forceDl) {
+    await downloader.download(fileUrl, modCacheFile);
   }
 
   // extract mod
   await fileOps.makeEmptyDir(zipDir);
-  console.log('extracting mod ' + filePath + ' to ' + zipDir);
-  await fileOps.extractZip(filePath);
+  console.log('extracting mod ' + modCacheFile + ' to ' + zipDir);
+  await fileOps.extractZip(modCacheFile, zipDir);
   console.log('extracted mod ' + modName + ' to ' + zipDir);
   // go through extracted files recursively and find the topmost folder with a dll
   const modFolders = await fileOps.findModFolders(zipDir);
   if (modFolders.length <= 0) {
     throw new Error('Could not find any mods');
   }
+
+  // make sure target dir exists
+  await fileOps.makeSureDirExists(outPath);
+
   console.log('found mod folders ' + modFolders);
   for (const modFolder of modFolders) {
-    const targetfolderName = modFolder == zipDir ? modName : path.basename(modFolder);
+    const targetfolderName = modFolder == zipDir ? modFileName.substring(0, modFileName.length - 4) : path.basename(modFolder);
     const targetPath = path.join(outPath, targetfolderName);
     // delete existing mod folder
     console.log('deleting existing mod folder ' + targetPath);
