@@ -48,18 +48,29 @@ export class FileOperations {
     const exists = await this.exists(path);
     if(exists == 'dir') {
       console.log('deleting dir ' + path);
-      pfs.rm(path, { recursive: true });
+      await pfs.rm(path, { recursive: true });
     } else if(exists == 'file') {
       console.log('deleting file ' + path);
-      pfs.unlink(path);
+      await pfs.unlink(path);
     }
     return !!exists;
   }
 
   async makeEmptyDir(dir: string): Promise<void> {
-    this.deleteAny(dir);
+    await this.deleteAny(dir);
     console.log('creating dir ' + dir);
-    pfs.mkdir(dir);
+    await pfs.mkdir(dir);
+  }
+  
+  async makeSureDirExists(dir: string): Promise<void> {
+    const exists = await this.exists(dir);
+    if(exists === 'file') {
+      await pfs.unlink(dir);
+      await pfs.mkdir(dir);
+    }
+    else if(!exists) {
+      await pfs.mkdir(dir);
+    }
   }
 
   extractZip(filePath: string): Promise<void> {
