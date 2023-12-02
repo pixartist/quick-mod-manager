@@ -1,0 +1,10 @@
+{
+  "targetDir": "J:/SteamLibrary/steamapps/common/Cities Skylines II/BepInEx/plugins",
+  "mods": [
+   "https://github.com/slyh/Cities2-Various-Mods",
+   "https://thunderstore.io/c/cities-skylines-ii/p/Cities2Modding/ExtendedTooltip/",
+   "https://thunderstore.io/c/cities-skylines-ii/p/Cities2Modding/DucksInARow/",
+   "https://thunderstore.io/c/cities-skylines-ii/p/CaptainOfCoit/CityMonitor/",
+   "https://thunderstore.io/c/cities-skylines-ii/p/Cities2Modding/MOOB/"
+  ]
+}

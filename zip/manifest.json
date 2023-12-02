@@ -1,0 +1,9 @@
+{
+    "name": "MOOB",
+    "version_number": "0.0.3",
+    "website_url": "https://github.com/Cities2Modding/MOOB",
+    "description": "Enable access to map editor and fixes for importing/exporting 16-bit heightmaps.",
+    "dependencies": [
+        "BepInEx-BepInExPack-5.4.2100"
+    ]
+}
