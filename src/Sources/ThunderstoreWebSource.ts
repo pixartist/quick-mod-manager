@@ -19,14 +19,15 @@ export class ThunderstoreWebSource extends WebSource {
     return this.wrapped(() => this.root!('table.table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2)').text());
   }
   async getDependencies(): Promise<string[]> {
-    return this.wrapped(() => this.root!('div.list-group-item > div:nth-child(1) > div:nth-child(2) > h5:nth-child(1) > a:nth-child(1)').map((i, el) => 'https://thunderstore.io' + cheerio(el).attr('href')).get());
+    return this.wrapped(() => this.root!('div.list-group-item > div:nth-child(1) > div:nth-child(2) > h5:nth-child(1) > a:nth-child(1)')
+      .map((i, el) => 'https://thunderstore.io' + cheerio(el).attr('href')).get());
   }
   protected wrapped<T>(f: () => T | undefined): NonNullable<T> {
-    if(!this.root) {
+    if (!this.root) {
       throw new Error('WebScraper not loaded');
     }
     const v = f();
-    if(!v) {
+    if (!v) {
       throw new Error('Could not find element(s)');
     }
     return v;

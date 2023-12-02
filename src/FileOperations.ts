@@ -9,12 +9,12 @@ export class FileOperations {
 
   async exists(path: string): Promise<'dir' | 'file' | null> {
     try {
-        const stat = await fs.promises.stat(path);
-        return stat.isDirectory() ? 'dir' : 'file';
+      const stat = await fs.promises.stat(path);
+      return stat.isDirectory() ? 'dir' : 'file';
     } catch {
-        return null;
+      return null;
     }
-}
+  }
 
   async listFiles(directoryPath: string): Promise<string[]> {
     return await pfs.readdir(directoryPath);
@@ -24,32 +24,32 @@ export class FileOperations {
     const files = await pfs.readdir(dir);
     const dlls = [];
     for (const file of files) {
-        const filePath = path.join(dir, file);
-        if ((await pfs.lstat(filePath)).isFile() && file.endsWith('.dll')) {
-            dlls.push(dir);
-            return dlls;
-        }
+      const filePath = path.join(dir, file);
+      if ((await pfs.lstat(filePath)).isFile() && file.endsWith('.dll')) {
+        dlls.push(dir);
+        return dlls;
+      }
     }
-  
+
     for (const file of files) {
-        const filePath = path.join(dir, file);
-        if ((await pfs.lstat(filePath)).isDirectory()) {
-            const dll = await this.findModFolders(filePath);
-            if (dll) {
-                dlls.push(...dll);
-            }
+      const filePath = path.join(dir, file);
+      if ((await pfs.lstat(filePath)).isDirectory()) {
+        const dll = await this.findModFolders(filePath);
+        if (dll) {
+          dlls.push(...dll);
         }
+      }
     }
-  
+
     return dlls;
   }
 
   async deleteAny(path: string): Promise<boolean> {
     const exists = await this.exists(path);
-    if(exists == 'dir') {
+    if (exists == 'dir') {
       console.log('deleting dir ' + path);
       await pfs.rm(path, { recursive: true });
-    } else if(exists == 'file') {
+    } else if (exists == 'file') {
       console.log('deleting file ' + path);
       await pfs.unlink(path);
     }
@@ -61,14 +61,14 @@ export class FileOperations {
     console.log('creating dir ' + dir);
     await pfs.mkdir(dir);
   }
-  
+
   async makeSureDirExists(dir: string): Promise<void> {
     const exists = await this.exists(dir);
-    if(exists === 'file') {
+    if (exists === 'file') {
       await pfs.unlink(dir);
       await pfs.mkdir(dir);
     }
-    else if(!exists) {
+    else if (!exists) {
       await pfs.mkdir(dir);
     }
   }

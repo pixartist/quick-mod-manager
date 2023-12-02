@@ -15,9 +15,9 @@ export abstract class WebSource {
   // array of implementations, populated by register()
   private static implementations: WebSourceRegistration[] = [];
 
-  public static register(t: WebSourceConstructor)  {
+  public static register(t: WebSourceConstructor) {
     console.log('registering ' + t.name);
-    WebSource.implementations.push({ constructor:t , match: t.prototype.match });
+    WebSource.implementations.push({ constructor: t, match: t.prototype.match });
 
   };
 
@@ -30,7 +30,7 @@ export abstract class WebSource {
     throw new Error('Unknown url ' + url);
   }
 
-  public constructor(public readonly url: string) {}
+  public constructor(public readonly url: string) { }
   abstract load(): Promise<WebSource>;
   abstract getDownloadLink(): Promise<string>;
   abstract getName(): Promise<string>;
