@@ -22,12 +22,12 @@ export class FileOperations {
 
   async findModFolders(dir: string): Promise<string[]> {
     const files = await pfs.readdir(dir);
-    const dlls = [];
+    const folders = [];
     for (const file of files) {
       const filePath = path.join(dir, file);
       if ((await pfs.lstat(filePath)).isFile() && file.endsWith('.dll')) {
-        dlls.push(dir);
-        return dlls;
+        folders.push(dir);
+        return folders;
       }
     }
 
@@ -36,12 +36,12 @@ export class FileOperations {
       if ((await pfs.lstat(filePath)).isDirectory()) {
         const dll = await this.findModFolders(filePath);
         if (dll) {
-          dlls.push(...dll);
+          folders.push(...dll);
         }
       }
     }
 
-    return dlls;
+    return folders;
   }
 
   async deleteAny(path: string): Promise<boolean> {
