@@ -47,10 +47,8 @@ export class FileOperations {
   async deleteAny(path: string): Promise<boolean> {
     const exists = await this.exists(path);
     if (exists == 'dir') {
-      console.log('deleting dir ' + path);
       await pfs.rm(path, { recursive: true });
     } else if (exists == 'file') {
-      console.log('deleting file ' + path);
       await pfs.unlink(path);
     }
     return !!exists;
@@ -58,7 +56,6 @@ export class FileOperations {
 
   async makeEmptyDir(dir: string): Promise<void> {
     await this.deleteAny(dir);
-    console.log('creating dir ' + dir);
     await pfs.mkdir(dir);
   }
 
@@ -66,10 +63,10 @@ export class FileOperations {
     const exists = await this.exists(dir);
     if (exists === 'file') {
       await pfs.unlink(dir);
-      await pfs.mkdir(dir);
+      await pfs.mkdir(dir, { recursive: true });
     }
     else if (!exists) {
-      await pfs.mkdir(dir);
+      await pfs.mkdir(dir, { recursive: true });
     }
   }
 

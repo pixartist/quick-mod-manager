@@ -35,5 +35,6 @@ export abstract class WebSource {
   abstract getDownloadLink(): Promise<string>;
   abstract getName(): Promise<string>;
   abstract getDependencies(): Promise<string[]>;
+  abstract getLatestVersion(): Promise<string>;
   abstract match(url: string): Promise<boolean>;
 }

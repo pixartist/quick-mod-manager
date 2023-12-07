@@ -31,6 +31,9 @@ export class GithubWebSource extends WebSource {
   async getDependencies(): Promise<string[]> {
     return [];
   }
+  async getLatestVersion(): Promise<string> {
+    return this.latest.tag_name;
+  }
   private findCorrectDownloadLink(links: string[]): string | null {
     const validLinks = links.filter(link => link.includes('/releases/download/'));
     for (const link of validLinks) {
